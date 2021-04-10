@@ -1,0 +1,92 @@
+
+<!docpyte html>
+<html lang="zh_tw">
+<head>
+<meta charset="utf-8">
+<script>
+var ux,uy,bx,by,sx,sy;
+var ufo=[];
+var t=setInterval("go()",300);
+var t2=setInterval("add()",1000);
+var tb;
+var isfire=0;
+function reset(){
+	var top=document.getElementById("top");
+	for (var k=0;k<ufo.length;k=k+1)
+	    top.removeChild(ufo[k]);
+	ufo=[];
+	t2=setInterval("add()",1000);
+	/*****
+	while (top.firstChild){
+	    top.removeChild(top.firstChild);
+	}
+	*****/
+}
+document.onmousemove=function(e){
+    sx=e.clientX;
+	document.getElementById("station").style.left=sx+"px";
+	if (isfire==0)
+	    document.getElementById("b").style.left=(sx+38)+"px";
+}
+document.onmousedown=function(e){
+    if (isfire==0)
+        tb=setInterval("fire()",200);
+	isfire=1;
+}
+function add(){
+    if (ufo.length<50){
+        var n=document.createElement("div");
+	    n.style.position="absolute";
+	    n.style.top=(Math.floor(Math.random()*100)+50)+"px";
+	    n.style.left=Math.floor(Math.random()*800)+"px";
+	    n.style.width="80px";
+	    n.style.height="30px";
+	    n.style.background="green";
+	    document.getElementById("top").appendChild(n);
+	    ufo[ufo.length]=n;
+	}
+}
+function fire(){
+    bx=parseInt(document.getElementById("b").style.left);
+    by=parseInt(document.getElementById("b").style.top);
+	by=by-50;
+	for (var i=0;i<ufo.length;i=i+1){
+	    ux=parseInt(ufo[i].style.left);
+	    uy=parseInt(ufo[i].style.top);
+	    if (bx>ux  && by>uy && bx<ux+80 &&by<uy+30){
+		    document.getElementById("top").removeChild(ufo[i]);
+			ufo.splice(i,1);
+	        clearInterval(tb);
+			isfire=0;
+			by=447;
+		}
+	}
+	if (by<0){
+	    isfire=0;
+	    by=447;
+		clearInterval(tb);
+	}
+	document.getElementById("b").style.top=by+"px";
+}
+function go(){
+    for (var i=0;i<ufo.length;i=i+1){
+        ux=parseInt(ufo[i].style.left);
+	    uy=parseInt(ufo[i].style.top);
+	    ux=ux+20;
+	    if (ux>800) ux=0;
+	    ufo[i].style.left=ux+"px";
+	}
+}
+</script>
+<title>打多個飛碟</title>
+</head>
+<body>
+<h3 style="margin: 0px auto;">打多個飛碟</h3>
+<button onclick="reset()">重來</button>
+<div id="b" style="position:absolute;
+width:4px;height:4px;background:black;top:447px;left:138px"></div>
+<div id="top"></div>
+<div id="station" style="position:absolute;
+width:80px;height:30px;background:skyblue;top:450px;left:100px"></div>
+</body>
+</html>
